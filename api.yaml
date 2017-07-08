@@ -1,0 +1,69 @@
+swagger: '2.0'
+info:
+  title: Transaction Service
+  description: |
+    Aggregates transaction statistics
+  version: "0.0.1"
+  contact:
+    name: Mazen Melouk
+    email: melouk.mazen@gmail.com
+produces:
+  - application/json
+  - application/problem+json
+consumes:
+  - application/json
+paths:
+  /transactions:
+    post:
+      summary: Submits a transaction
+      description: |
+        Submits a transaction to be stored for statistics calcaulation
+      parameters:
+        - name: transaction
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Transaction'
+      responses:
+        201:
+          description: Persisted transaction
+        204:
+          description: Transaction is out of last minute range thus not persisted
+  /statistics:
+    get:
+      summary: Get statistics
+      description: |
+        Generated aggregated statistics for transactions in past minute
+      responses:
+        200:
+          description: Statistics for last minute
+          schema:
+            $ref: '#/definitions/Statistics'
+
+
+definitions:
+  Transaction:
+      properties:
+        amount:
+          type: number
+          format: float
+        timestamp:
+          type: number
+          format: int64
+  Statistics:
+      properties:
+        sum:
+          type: number
+          format: float
+        max:
+          type: number
+          format: float
+        min:
+          type: number
+          format: float
+        average:
+          type: number
+          format: float
+        count:
+          type: number
+          format: int32
